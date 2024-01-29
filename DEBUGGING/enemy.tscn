@@ -1,0 +1,168 @@
+[gd_scene load_steps=12 format=3 uid="uid://dndgrxmsxaumt"]
+
+[ext_resource type="Texture2D" uid="uid://mk74j1en7f7" path="res://DEBUGGING/resources/Enemy.png" id="2_eefx2"]
+[ext_resource type="PackedScene" uid="uid://blnljivlsipod" path="res://DEBUGGING/Hurtbox.tscn" id="2_grcl4"]
+[ext_resource type="Material" uid="uid://mp2p7tjduxm7" path="res://DEBUGGING/resources/NormalDam.tres" id="4_o1j5b"]
+[ext_resource type="Texture2D" uid="uid://dj5n773kveski" path="res://icon.svg" id="7_h0ynh"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7y7l2"]
+atlas = ExtResource("2_eefx2")
+region = Rect2(0, 0, 32, 96)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_q2lqv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7y7l2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_o3hpk"]
+radius = 5.02494
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4bshy"]
+size = Vector2(36, 63)
+
+[sub_resource type="Animation" id="Animation_40k1v"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("BodyAnim:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("BodyAnim:animation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("BodyAnim:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("BodyAnim:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_wqrs7"]
+resource_name = "TakingDmg"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Enemy/BodyAnim:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1, 0.3),
+"transitions": PackedFloat32Array(0.0490366, 1),
+"update": 0,
+"values": [Color(100, 7.692, 100, 1), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Enemy/GPUParticles2D")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"restart"
+}]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_jyo0a"]
+_data = {
+"RESET": SubResource("Animation_40k1v"),
+"TakingEnemyDmg": SubResource("Animation_wqrs7")
+}
+
+[node name="Enemy" type="CharacterBody2D" groups=["BulletLovers"]]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(201, 126)
+collision_layer = 4
+collision_mask = 15
+floor_block_on_wall = false
+platform_floor_layers = 4294967041
+platform_wall_layers = 4
+metadata/_edit_group_ = true
+
+[node name="BodyAnim" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_q2lqv")
+animation = &"idle"
+
+[node name="Head" type="Sprite2D" parent="BodyAnim"]
+z_index = 4
+texture_filter = 1
+texture = ExtResource("2_eefx2")
+hframes = 7
+frame = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 9.5)
+shape = SubResource("CircleShape2D_o3hpk")
+
+[node name="Hurtbox" parent="." node_paths=PackedStringArray("AnimPlayer") instance=ExtResource("2_grcl4")]
+collision_layer = 4
+collision_mask = 9
+AnimPlayer = NodePath("../TakeDmg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_4bshy")
+
+[node name="TakeDmg" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_jyo0a")
+}
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+emitting = false
+process_material = ExtResource("4_o1j5b")
+texture = ExtResource("7_h0ynh")
+lifetime = 0.6
+one_shot = true
+explosiveness = 1.0
+randomness = 0.32
+
+[connection signal="mouse_entered" from="Hurtbox" to="Hurtbox" method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="Hurtbox" to="Hurtbox" method="_on_mouse_exited"]

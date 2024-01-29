@@ -1,0 +1,12 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1706486391
+icon.svg::CompressedTexture2D::7853741167238632532::1705511814::1706486308::1::::<><>::
+::res://DEBUGGING/::1706486321
+debugging.tscn::PackedScene::7345529888824207236::1706486321::0::1::::<><>::uid://dndgrxmsxaumt::::res://DEBUGGING/enemy.tscn
+enemy.tscn::PackedScene::8078306039512188715::1706486321::0::1::::<><>::uid://mk74j1en7f7::::res://DEBUGGING/resources/Enemy.png<>uid://blnljivlsipod::::res://DEBUGGING/Hurtbox.tscn<>uid://mp2p7tjduxm7::::res://DEBUGGING/resources/NormalDam.tres<>uid://dj5n773kveski::::res://icon.svg
+Hurtbox.gd::GDScript::-1::1706485220::0::1::::<>Area2D<>::
+Hurtbox.tscn::PackedScene::3186019286731679387::1706485244::0::1::::<><>::res://DEBUGGING/Hurtbox.gd
+::res://DEBUGGING/resources/::1706486320
+Enemy.png::CompressedTexture2D::25438386648947058::1705649720::1706486318::1::::<><>::
+NormalDam.tres::ParticleProcessMaterial::874899646192782660::1706486320::0::1::::<><>::
+TakingEnemyDmg.res::Animation::4938229816778645515::1706485331::0::1::::<><>::
